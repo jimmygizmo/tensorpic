@@ -1,4 +1,4 @@
-# Version-pinned requirements for TensorPIC project
+# Version-pinned requirements for TensorPic project
 
 absl-py==1.2.0
 astunparse==1.6.3
@@ -44,6 +44,7 @@ tensorflow==2.10.0
 tensorflow-estimator==2.10.0
 tensorflow-io-gcs-filesystem==0.27.0
 termcolor==2.0.1
+tqdm==4.64.1
 typing_extensions==4.3.0
 urllib3==1.26.12
 Werkzeug==2.2.2

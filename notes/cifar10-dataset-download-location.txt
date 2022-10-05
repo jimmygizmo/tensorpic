@@ -1,0 +1,27 @@
+
+
+(train_images, train_labels), (test_images, test_labels) = datasets.cifar10.load_data()
+
+# NOTE: This call causes Keras to download the dataset and unpack it inside ~/.keras/datasets/
+
+
+(ve.tensorpic) ➜  tensorpic git:(main) ✗ ls -alt ~/.keras/datasets
+total 360672
+drwxr-xr-x   4 bilbo  staff        128 Oct  5 08:14 .
+-rw-r--r--   1 bilbo  staff  170498071 Oct  5 08:14 cifar-10-batches-py.tar.gz
+drwxr-xr-x   4 bilbo  staff        128 Oct  5 08:14 ..
+drwxr-xr-x  10 bilbo  staff        320 Jun  4  2009 cifar-10-batches-py
+(ve.tensorpic) ➜  tensorpic git:(main) ✗ ls -alt ~/.keras/datasets/cifar-10-batches-py
+total 363752
+drwxr-xr-x   4 bilbo  staff       128 Oct  5 08:14 ..
+drwxr-xr-x  10 bilbo  staff       320 Jun  4  2009 .
+-rw-r--r--   1 bilbo  staff        88 Jun  4  2009 readme.html
+-rw-r--r--   1 bilbo  staff       158 Mar 30  2009 batches.meta
+-rw-r--r--   1 bilbo  staff  31035696 Mar 30  2009 data_batch_4
+-rw-r--r--   1 bilbo  staff  31035704 Mar 30  2009 data_batch_1
+-rw-r--r--   1 bilbo  staff  31035623 Mar 30  2009 data_batch_5
+-rw-r--r--   1 bilbo  staff  31035320 Mar 30  2009 data_batch_2
+-rw-r--r--   1 bilbo  staff  31035999 Mar 30  2009 data_batch_3
+-rw-r--r--   1 bilbo  staff  31035526 Mar 30  2009 test_batch
+(ve.tensorpic) ➜  tensorpic git:(main) ✗
+

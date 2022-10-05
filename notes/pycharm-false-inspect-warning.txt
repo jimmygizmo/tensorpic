@@ -1,0 +1,8 @@
+
+# This is a pycharm inspection bug. Right-click ignore it.
+
+# NOTE: PyCharm bug for datasets.cifar10. SET PYCHARM TO IGNORE the warning: "Cannot find reference 'cifar10' ..."
+(train_images, train_labels), (test_images, test_labels) = datasets.cifar10.load_data()
+
+https://stackoverflow.com/questions/23248017/cannot-find-reference-xxx-in-init-py
+

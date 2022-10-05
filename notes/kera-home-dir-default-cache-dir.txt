@@ -1,0 +1,21 @@
+
+# NOTE: This call causes Keras to download the dataset and unpack it inside ~/.keras/datasets/
+
+(train_images, train_labels), (test_images, test_labels) = datasets.cifar10.load_data()
+
+# There are other Keras calls which will also download and unpack here when no specific option is given
+# for some other location.
+
+# If your disk is filling up after a lot of ML work, don't forget to look in ~/.keras/ for stuff to clean up!
+# You could easily end up with gigs of data and hundreds of thousands of individual files in there after just
+# a little bit of Keras ML work.
+
+# TODO: Move this stuff or copy it to a separate note file on this topic.
+
+# On a related note, if you have dataset dirs unpacked inside your project, then your IDE is probably wasting
+# massive resources on indexing those, probably repeatedly. This can bring your IDE or machine to a crawl.
+# Be sure to EXCLUDE DATASET DIRS that live in your project space FROM YOUR IDE INDEXING FEATURES.
+#
+# In PyCharm, I just mark such dirs as Excluded.
+# This is very important.
+

@@ -1,0 +1,8 @@
+import os
+# Stop those incredibly unhelpful and annoying TF warnings about hardware options.
+os.environ['TF_CPP_MIN_LOG_LEVEL'] = '3'
+
+This works.
+
+https://www.kaggle.com/c/ventilator-pressure-prediction/discussion/274717
+

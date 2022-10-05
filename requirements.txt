@@ -1,4 +1,4 @@
-# Requirements for the TensorPIC project
+# Requirements for the TensorPic project
 
 # NOTE: Matplot lib >=3.6.0 gives an annoying deprecation warning, but older version don't work quite right.
 

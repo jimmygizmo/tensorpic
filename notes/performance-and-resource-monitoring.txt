@@ -1,0 +1,89 @@
+
+
+
+Which processes are using the most memory?
+
+# Does not work on macOS. TODO: Will try this on Linux and update.
+ps aux --sort=-%mem | head
+
+-----------------------------------------------------------------------
+A few iostats during training:
+
+
+(ve.tensorpic) ➜  tensorpic git:(main) ✗ iostat
+              disk0       cpu    load average
+    KB/t  tps  MB/s  us sy id   1m   5m   15m
+   12.28   86  1.03  20 10 70  7.92 7.16 4.48
+
+
+(ve.tensorpic) ➜  tensorpic git:(main) ✗ iostat
+              disk0       cpu    load average
+    KB/t  tps  MB/s  us sy id   1m   5m   15m
+   12.29   86  1.03  20 10 70  7.79 7.16 4.54
+
+----------------------------------------
+macOS memory_pressure during training:
+(ve.tensorpic) ➜  tensorpic git:(main) ✗ memory_pressure
+The system has 8589934592 (2097152 pages with a page size of 4096).
+
+Stats:
+Pages free: 4605
+Pages purgeable: 14778
+Pages purged: 10360855
+
+Swap I/O:
+Swapins: 2657565
+Swapouts: 3178873
+
+Page Q counts:
+Pages active: 496563
+Pages inactive: 495097
+Pages speculative: 845
+Pages throttled: 0
+Pages wired down: 483206
+
+Compressor Stats:
+Pages used by compressor: 616510
+Pages decompressed: 48052876
+Pages compressed: 73923923
+
+File I/O:
+Pageins: 12328963
+Pageouts: 550145
+
+System-wide memory free percentage: 47%
+
+--------------------------------------
+Another:
+(ve.tensorpic) ➜  tensorpic git:(main) ✗ memory_pressure
+The system has 8589934592 (2097152 pages with a page size of 4096).
+
+Stats:
+Pages free: 5299
+Pages purgeable: 13779
+Pages purged: 10369218
+
+Swap I/O:
+Swapins: 2659930
+Swapouts: 3178873
+
+Page Q counts:
+Pages active: 514670
+Pages inactive: 508696
+Pages speculative: 789
+Pages throttled: 0
+Pages wired down: 479468
+
+Compressor Stats:
+Pages used by compressor: 588070
+Pages decompressed: 48103285
+Pages compressed: 73927051
+
+File I/O:
+Pageins: 12329078
+Pageouts: 550212
+
+System-wide memory free percentage: 49%
+
+----------------------------------
+
