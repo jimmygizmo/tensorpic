@@ -2,8 +2,9 @@
 
 # Use all or just some of the below commands as needed.
 # It is not guaranteed you can just run this script as is.
-# You need Pyenv and Pyenv Virtualenv and need to be inside the project root.
+# You need Pyenv and Pyenv Virtualenv and you need to be inside the project root.
 # Then you might be able to use this entire script as is.
+# What might be most convenient is to just run this from the pip installs. So I have disabled the Pyenv steps.
 # I'm sure you will figure it out. :)
 
 # 1. install latest Python 3. I'm using 3.10.6.  #### DISABLED. Uncomment if you need it.

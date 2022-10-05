@@ -1,8 +1,12 @@
 # .gitignore
 
-# Project will download training data.
-dataset-cifar10/
-dataset-flowers/
+# In case project will download training data to the project dir.
+# These use standardized names for that purpose.
+# NOTE: Currently the project will automatically download the dataset into the default Keras cache dir: ~/.keras/
+# Datasets will be under: ~/.keras/datasets/ and of no concern to .gitignore.
+# Create these directories if they will be used. Also, exclude them from IDE indexing. (Important!)
+#dataset-cifar10/
+#dataset-flowers/
 
 # IntelliJ IDEs
 .idea/

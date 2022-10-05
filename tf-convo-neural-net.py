@@ -1,6 +1,6 @@
 #! /usr/bin/env python
 # git@github.com:jimmygizmo/tensorpic/tf-convo-neural-net.py
-# Version 0.9.0
+# Version 1.0.0
 
 print("Initializing Tensorflow.")
 import os
@@ -50,6 +50,9 @@ for i in range(25):
     plt.imshow(train_images[i])
     # The CIFAR labels happen to be arrays, which is why you need the extra index.
     plt.xlabel(class_names[train_labels[i][0]])
+
+
+log(f"PLOT: Dataset image and label examples.")
 plt.show()
 
 
