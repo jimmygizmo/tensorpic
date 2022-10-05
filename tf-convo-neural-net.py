@@ -14,6 +14,7 @@ import matplotlib.pyplot as plt
 import pprint
 
 
+# This code inspired by the following Tensorflow tutorial. A little bit of text was copied verbatim into the comments.
 # https://www.tensorflow.org/tutorials/images/cnn
 
 pp = pprint.PrettyPrinter(indent=4)
@@ -102,6 +103,7 @@ model.summary()
 
 log_phase(f"COMPILE: Compile the model.")
 
+log(f"MODEL compilation options: losses.SparseCategoricalCrossentropy(from_logits=True), metrics=['accuracy']")
 model.compile(
     optimizer='adam',
     loss=tf.keras.losses.SparseCategoricalCrossentropy(from_logits=True),
