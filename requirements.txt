@@ -10,6 +10,12 @@ matplotlib
 # causes a warning from PyCharm unless you add keras here. Does not hurt anything.
 keras
 
+# numpy and PIL/Pillow came in already as a result of tensorflow most likely, but PyCharm is
+# complaining that they are not in the reqs, so here they are to get
+# rid of the warning. The imports work in either case.
+numpy
+Pillow
+
 # For saving and loading models: pyyaml, h5py
 pyyaml
 h5py

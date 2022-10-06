@@ -1,10 +1,10 @@
 #! /usr/bin/env python
-# git@github.com:jimmygizmo/tensorpic/tf-convo-neural-net.py
+# git@github.com:jimmygizmo/tensorpic/tf-convo-neural-net-cifar.py
 # Version 1.0.0
 
 print("Initializing Tensorflow.")
 import os
-os.environ['TF_CPP_MIN_LOG_LEVEL'] = '3'  # Stop annoying TF messages about compilation hardware options.
+os.environ["TF_CPP_MIN_LOG_LEVEL"] = "3"  # Stop annoying TF messages about compilation hardware options.
 
 import tensorflow as tf
 from keras import datasets
