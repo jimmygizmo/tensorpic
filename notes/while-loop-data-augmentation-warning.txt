@@ -16,3 +16,21 @@ WARNING:tensorflow:Using a while_loop for converting RngReadAndSkip cause there 
 WARNING:tensorflow:Using a while_loop for converting Bitcast cause there is no registered converter for this op.
 WARNING:tensorflow:Using a while_loop for converting Bitcast cause there is no registered converter for this op.
 
+FIX:
+
+
+tf_logger_initial_level = tf.get_logger().getEffectiveLevel()
+log(f"Tensorflow logger initial effective logging level: {tf_logger_initial_level}")
+
+log(f"* Setting tensorflow logger to quieter ERROR level to suppress excessive warnings during data augmentation.")
+tf.get_logger().setLevel('ERROR')
+
+##########################
+do the thing here that causes warnings: data augmentation in this case.
+##########################
+
+log(f"* Returning tensorflow logger to original level: {tf_logger_initial_level}")
+tf.get_logger().setLevel(tf_logger_initial_level)
+
+The fix works perfectly.
+

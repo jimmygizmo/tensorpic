@@ -22,7 +22,7 @@ from PIL import Image
 # https://www.tensorflow.org/tutorials/images/classification
 
 DATASET_URL = "https://storage.googleapis.com/download.tensorflow.org/example_images/flower_photos.tgz"
-EPOCHS = 10
+EPOCHS = 4
 
 pp = pprint.PrettyPrinter(indent=4)
 
@@ -199,10 +199,11 @@ history = model.fit(
     epochs=EPOCHS
 )
 
-log_phase(f"PHASE 6: VISUALIZE - xxxxxxxxxx")
+log_phase(f"PHASE 6: VISUALIZE - Assess accuracy over training epochs. One goal is to try to detect overfitting.")
 
 
-log(f"PLOT: xxxxxxxxxxxxx")
+log(f"PLOT: Historical accuracy over epochs comparing accuracy or training vs. validation.")
+log(f"PLOT: * CLOSE PLOT/IMAGE WINDOW TO RESUME EXECUTION *  Execution will pause here on most platforms.")
 acc = history.history['accuracy']
 val_acc = history.history['val_accuracy']
 
@@ -225,7 +226,11 @@ plt.legend(loc='upper right')
 plt.title('Training and Validation Loss')
 plt.show()
 
-log_phase(f"PHASE 7: FIRST OPTIMIZATION - Address overfitting using Data Augmentation and a Dropout.")
+
+log_phase(f"PHASE 7: FIRST OPTIMIZATION - Address overfitting using Data Augmentation")
+
+log(f"* Setting tensorflow logger to quieter ERROR level to suppress excessive warnings during data augmentation.")
+tf.get_logger().setLevel('ERROR')
 
 log(f"Data Augmentation: RandomFlip, RandomRotation, RandomZoom")
 data_augmentation = keras.Sequential(
@@ -241,10 +246,6 @@ data_augmentation = keras.Sequential(
 
 log(f"Visualize data augmentation: 3x3 of 9 randomly augmented variants of one training image.")
 
-
-log(f"* Setting tensorflow logger to quieter ERROR level to suppress excessive warnings during data augmentation.")
-tf.get_logger().setLevel('ERROR')
-
 log(f"PLOT: 3x3 - 9 Data Augmentation examples: RandomFlip, RandomRotation, RandomZoom")
 log(f"PLOT: * CLOSE PLOT/IMAGE WINDOW TO RESUME EXECUTION *  Execution will pause here on most platforms.")
 plt.figure(figsize=(10, 10))
@@ -259,6 +260,51 @@ plt.show()
 
 log(f"* Returning tensorflow logger to original level: {tf_logger_initial_level}")
 tf.get_logger().setLevel(tf_logger_initial_level)
+
+
+log_phase(f"PHASE 8: SECOND OPTIMIZATION: - Addressing overfitting. Data augmentation complete, now add Dropout.")
+
+# When you apply dropout to a layer, it randomly drops out (by setting the activation to zero) a number of output
+# units from the layer during the training process. Dropout takes a fractional number as its input value, in the
+# form such as 0.1, 0.2, 0.4, etc. This means dropping out 10%, 20% or 40% of the output units randomly
+# from the applied layer.
+
+log(f"MODEL: Create a new model WITH DROPOUT and train it with the augmented data.")
+
+model = Sequential([
+    data_augmentation,
+    layers.Rescaling(1./255),
+    layers.Conv2D(16, 3, padding="same", activation="relu"),
+    layers.MaxPooling2D(),
+    layers.Conv2D(32, 3, padding="same", activation="relu"),
+    layers.MaxPooling2D(),
+    layers.Conv2D(64, 3, padding="same", activation="relu"),
+    layers.MaxPooling2D(),
+    layers.Dropout(0.2),
+    layers.Flatten(),
+    layers.Dense(128, activation="relu"),
+    layers.Dense(num_classes, name="outputs")
+])
+
+log(f"COMPILE MODEL: Standard settings, but this is the Dropout model using augmented data.")
+model.compile(
+    optimizer='adam',
+    loss=tf.keras.losses.SparseCategoricalCrossentropy(from_logits=True),
+    metrics=['accuracy']
+)
+
+log(f"Model summary:")
+model.summary()
+
+
+log(f"TRAIN MODEL: Train the Dropout model using the augmented data.")
+epochs = 15
+history = model.fit(
+    training_dataset,
+    validation_data=validation_dataset,
+    epochs=epochs
+)
+
 
 
 log_phase(f"PROJECT:  KERAS IMAGE CLASSIFICATION, ITERATIVE OPTIMIZATION DEMONSTRATION COMPLETE.  Exiting.")
