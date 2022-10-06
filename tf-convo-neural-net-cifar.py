@@ -14,7 +14,7 @@ import matplotlib.pyplot as plt
 import pprint
 
 
-# This code inspired by the following Tensorflow tutorial. A little bit of text was copied verbatim into the comments.
+# This program was inspired by the following Tensorflow tutorial. Some text was copied verbatim into the comments.
 # https://www.tensorflow.org/tutorials/images/cnn
 
 pp = pprint.PrettyPrinter(indent=4)
@@ -54,6 +54,8 @@ for i in range(25):
 
 
 log(f"PLOT: Dataset image and label examples.")
+log(f"PLOT: * CLOSE PLOT/IMAGE WINDOW TO RESUME EXECUTION *  Execution will pause here on most platforms.")
+# TODO: See about making this non-blocking. It is OK to just open the plot/image and then continue without pausing.
 plt.show()
 
 
@@ -146,6 +148,8 @@ test_loss, test_acc = model.evaluate(
 )
 
 log(f"PLOT: Accuracy history.")
+log(f"PLOT: * CLOSE PLOT/IMAGE WINDOW TO RESUME EXECUTION *  Execution will pause here on most platforms.")
+# TODO: See about making this non-blocking. It is OK to just open the plot/image and then continue without pausing.
 plt.show()
 
 log(f"Evaluation complete. Test accuracy: {test_acc}")

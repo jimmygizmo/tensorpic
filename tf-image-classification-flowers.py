@@ -18,10 +18,11 @@ import PIL
 from PIL import Image
 
 
-# This code inspired by the following Tensorflow tutorial. A little bit of text was copied verbatim into the comments.
+# This program was inspired by the following Tensorflow tutorial. Some text was copied verbatim into the comments.
 # https://www.tensorflow.org/tutorials/images/classification
 
 DATASET_URL = "https://storage.googleapis.com/download.tensorflow.org/example_images/flower_photos.tgz"
+EPOCHS = 10
 
 pp = pprint.PrettyPrinter(indent=4)
 
@@ -34,14 +35,17 @@ def log_phase(msg):
     print(f"\n\n[####]    ----  {msg}  ----\n")
 
 
-log_phase(f"PROJECT: IMAGE CLASSIFICATION, ITERATIVE TRAINING OPTIMIZATION - DEPLOYMENT - FLOWERS DATASET")
+log_phase(f"PROJECT:  KERAS IMAGE CLASSIFICATION, ITERATIVE OPTIMIZATION - DEPLOYMENT - FLOWERS DATASET")
+
 log(f"Tensorflow version: {tf.__version__}  -  Keras version: {tf.keras.__version__}")
+tf_logger_initial_level = tf.get_logger().getEffectiveLevel()
+log(f"Tensorflow logger initial effective logging level: {tf_logger_initial_level}")
 
 
 log_phase(f"PHASE 1:  Download dataset to ~/.keras/datasets/ and count image files. Inspect a sample of images.")
 
 dataset_dir = tf.keras.utils.get_file(
-    'flower_photos',
+    "flower_photos",
     origin=DATASET_URL,
     untar=True
 )
@@ -57,12 +61,12 @@ log(f"image_count: {image_count}")
 log(f"dataset_dir listing:\n{pp.pformat(list(dataset_dir.iterdir()))}")
 
 log(f"rose sample - 2 roses:")
-roses = list(dataset_dir.glob('roses/*'))
+roses = list(dataset_dir.glob("roses/*"))
 PIL.Image.open(str(roses[0])).show()
 PIL.Image.open(str(roses[1])).show()
 
 log(f"tulip sample - 2 tulips:")
-tulips = list(dataset_dir.glob('tulips/*'))
+tulips = list(dataset_dir.glob("tulips/*"))
 PIL.Image.open(str(tulips[0])).show()
 PIL.Image.open(str(tulips[1])).show()
 
@@ -99,9 +103,14 @@ class_names = training_dataset.class_names
 log(f"Class names (class_names):\n{class_names}")
 
 
+# TODO: MOST PHASE TITLES NEED RE-WRITING IN THIS PROGRAM AND IN CIFAR - FIX IN ALL PROGRAMS
+# TODO: MOST PHASE TITLES NEED RE-WRITING IN THIS PROGRAM AND IN CIFAR - FIX IN ALL PROGRAMS
+# TODO: MOST PHASE TITLES NEED RE-WRITING IN THIS PROGRAM AND IN CIFAR - FIX IN ALL PROGRAMS
 log_phase(f"PHASE 3:  Examine first 9 images of the dataset. ")
 
 log(f"PLOT:  3x3 - sample of 9 images with labels/categories/classes. ")
+log(f"PLOT: * CLOSE PLOT/IMAGE WINDOW TO RESUME EXECUTION *  Execution will pause here on most platforms.")
+# TODO: See about making this non-blocking. It is OK to just open the plot/image and then continue without pausing.
 plt.figure(figsize=(10, 10))
 for images, labels in training_dataset.take(1):
     for i in range(9):
@@ -122,8 +131,135 @@ plt.show()
 #     print(labels_batch.shape)
 #     break
 
+
+log(f"Configure the dataset for performance: Adding .cache() and .prefetch(buffer_size=AUTOTUNE)")
 AUTOTUNE = tf.data.AUTOTUNE
 
 training_dataset = training_dataset.cache().shuffle(1000).prefetch(buffer_size=AUTOTUNE)
 validation_dataset = validation_dataset.cache().prefetch(buffer_size=AUTOTUNE)
+# Related performance docs: https://www.tensorflow.org/guide/data_performance
+
+log(f"Standardize the data. 0->255 RGB values become 0->1. Small values are better for a neural network.")
+normalization_layer = layers.Rescaling(1./255)
+
+
+# # To use the normalization layer we have two options, do it separately or include it in the model.
+# # We want it in the model to assist our deployment. So we will NOT DO the following
+# # method of applying it to the data separately
+# def data_standardization_manually_upon_dataset_example():
+#     normalized_dataset = training_dataset.map(lambda x, y: (normalization_layer(x), y))
+#     image_batch, labels_batch = next(iter(normalized_dataset))
+#     first_image = image_batch[0]
+#     # Notice the pixel values are now in `[0,1]`.
+#     print(np.min(first_image), np.max(first_image))
+#
+#
+# log(f"data_standardization_manually_upon_dataset_example:")
+# data_standardization_manually_upon_dataset_example()
+
+log_phase(f"PHASE 4: MODEL - Create basic Keras Sequential model and compile it.")
+# The Keras Sequential model consists of three convolution blocks (tf.keras.layers.Conv2D) with a max pooling layer
+# (tf.keras.layers.MaxPooling2D) in each of them. There's a fully-connected layer (tf.keras.layers.Dense)
+# with 128 units on top of it that is activated by a ReLU activation function ("relu"). This model has not been
+# tuned for high accuracy; the goal of this tutorial is to show a standard approach.
+
+num_classes = len(class_names)
+
+model = Sequential([
+    layers.Rescaling(1./255, input_shape=(img_height, img_width, 3)),
+    layers.Conv2D(16, 3, padding="same", activation="relu"),
+    layers.MaxPooling2D(),
+    layers.Conv2D(32, 3, padding="same", activation="relu"),
+    layers.MaxPooling2D(),
+    layers.Conv2D(64, 3, padding="same", activation="relu"),
+    layers.MaxPooling2D(),
+    layers.Flatten(),
+    layers.Dense(128, activation="relu"),
+    layers.Dense(num_classes)
+])
+
+
+log(f"Compile the model: SparseCategoricalCrossentropy(from_logits=True), metrics=['accuracy']")
+model.compile(
+    optimizer="adam",
+    loss=tf.keras.losses.SparseCategoricalCrossentropy(from_logits=True),
+    metrics=["accuracy"]
+)
+
+log(f"Model summary:")
+model.summary()
+
+
+log_phase(f"PHASE 5: TRAINING - Train the model for 10 epochs with Keras model.fit.")
+
+
+history = model.fit(
+    training_dataset,
+    validation_data=validation_dataset,
+    epochs=EPOCHS
+)
+
+log_phase(f"PHASE 6: VISUALIZE - xxxxxxxxxx")
+
+
+log(f"PLOT: xxxxxxxxxxxxx")
+acc = history.history['accuracy']
+val_acc = history.history['val_accuracy']
+
+loss = history.history['loss']
+val_loss = history.history['val_loss']
+
+epochs_range = range(EPOCHS)
+
+plt.figure(figsize=(8, 8))
+plt.subplot(1, 2, 1)
+plt.plot(epochs_range, acc, label='Training Accuracy')
+plt.plot(epochs_range, val_acc, label='Validation Accuracy')
+plt.legend(loc='lower right')
+plt.title('Training and Validation Accuracy')
+
+plt.subplot(1, 2, 2)
+plt.plot(epochs_range, loss, label='Training Loss')
+plt.plot(epochs_range, val_loss, label='Validation Loss')
+plt.legend(loc='upper right')
+plt.title('Training and Validation Loss')
+plt.show()
+
+log_phase(f"PHASE 7: FIRST OPTIMIZATION - Address overfitting using Data Augmentation and a Dropout.")
+
+log(f"Data Augmentation: RandomFlip, RandomRotation, RandomZoom")
+data_augmentation = keras.Sequential(
+    [
+        layers.RandomFlip(
+            "horizontal",
+            input_shape=(img_height, img_width, 3)
+        ),
+        layers.RandomRotation(0.1),
+        layers.RandomZoom(0.1),
+    ]
+)
+
+log(f"Visualize data augmentation: 3x3 of 9 randomly augmented variants of one training image.")
+
+
+log(f"* Setting tensorflow logger to quieter ERROR level to suppress excessive warnings during data augmentation.")
+tf.get_logger().setLevel('ERROR')
+
+log(f"PLOT: 3x3 - 9 Data Augmentation examples: RandomFlip, RandomRotation, RandomZoom")
+log(f"PLOT: * CLOSE PLOT/IMAGE WINDOW TO RESUME EXECUTION *  Execution will pause here on most platforms.")
+plt.figure(figsize=(10, 10))
+for images, _ in training_dataset.take(1):
+    for i in range(9):
+        augmented_images = data_augmentation(images)
+        ax = plt.subplot(3, 3, i + 1)
+        plt.imshow(augmented_images[0].numpy().astype("uint8"))
+        plt.axis("off")
+
+plt.show()
+
+log(f"* Returning tensorflow logger to original level: {tf_logger_initial_level}")
+tf.get_logger().setLevel(tf_logger_initial_level)
+
+
+log_phase(f"PROJECT:  KERAS IMAGE CLASSIFICATION, ITERATIVE OPTIMIZATION DEMONSTRATION COMPLETE.  Exiting.")
 
