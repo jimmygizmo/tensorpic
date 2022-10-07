@@ -1,14 +1,19 @@
 # tensorpic
-Experiment with TensorFlow for image classification and convolutional neural network.
+Experiments with TensorFlow for image classification and convolutional neural network and optimization of such.
+Includes the export and running of a deployable TensorFlow Lite model.
 
-Keras will download the dataset into ~/.keras/datasets/
+Keras will download the datasets into ~/.keras/datasets/
 
 1. See the setup script for details on setting up Python and the Virtual Environment using Pyenv.
    setup-project.zsh
 2. Use the setup script to update pip and setuptools and to install from requirements.txt
-3. Run the script: tf-convo-neural-net-cifar.py
+3. Run the script: tf-convo-neural-net-cifar.py (PROJECT 1)
+4. Run the script: tf-image-classification-flowers.py (PROJECT 1)
 
 Execution will pause when plots are show. Close the plot window to resume program execution.
+
+(This file is only a stub for an upcoming project to be completed later: tf-performance-tune-bench.py)
+
 
 PYENV:
 I very strongly recommend using Pyenv. Python developers work on a lot of projects at once. It is important to match
