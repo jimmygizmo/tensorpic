@@ -1,6 +1,6 @@
 #! /usr/bin/env python
 # git@github.com:jimmygizmo/tensorpic/tf-image-classification-flowers.py
-# Version 0.9.0
+# Version 1.0.0
 
 print("Initializing Tensorflow.")
 import os
@@ -366,7 +366,7 @@ log_phase(f"PHASE 10: DEPLOYMENT - Convert model to TensorFlow Lite")
 log(f"* Setting tensorflow logger to quieter ERROR level to suppress warnings during TensorFlow Lite conversion.")
 tf.get_logger().setLevel('ERROR')
 
-log(f"PLOT: Convert the Keras Sequential model to a TensorFlow Lite model.")
+log(f"TENSORFLOW LITE MODEL CONVERSION: Convert the Keras Sequential model to a TensorFlow Lite model.")
 converter = tf.lite.TFLiteConverter.from_keras_model(model)
 tflite_model = converter.convert()
 
@@ -388,7 +388,9 @@ interpreter.get_signature_list()
 
 classify_lite = interpreter.get_signature_runner("serving_default")
 
-# TODO: This bare statement is highly unusual. The purpose is unclear. Could it possibly be a typo in the tutorial?
+# This bare statement is unusual, but I do not think it is a typo. This code works fine with no errors or warnings.
+# The PyCharm IDE complains that it appears to have no effect, but I am judging it as correct because it comes
+# from a reliable source, not known for typos.
 classify_lite
 
 predictions_lite = classify_lite(sequential_1_input=img_array)["outputs"]
