@@ -25,6 +25,7 @@ DATASET_URL = "https://storage.googleapis.com/download.tensorflow.org/example_im
 SUNFLOWER_URL = "https://storage.googleapis.com/download.tensorflow.org/example_images/592px-Red_sunflower.jpg"
 INITIAL_EPOCHS = 10
 OPTIMIZED_EPOCHS = 15
+TFLITE_MODEL_FILE_PATH = "model-flowers.tflite"
 
 pp = pprint.PrettyPrinter(indent=4)
 
@@ -373,10 +374,31 @@ log(f"* Returning tensorflow logger to original level: {tf_logger_initial_level}
 tf.get_logger().setLevel(tf_logger_initial_level)
 
 log(f"DEPLOYABLE MODEL: Writing TensorFlow Lite model to file: model-flowers.tflite")
-with open("model-flowers.tflite", "wb") as f:
+with open(TFLITE_MODEL_FILE_PATH, "wb") as f:
     f.write(tflite_model)
 
 # The exported model should be about 15 MB.
+
+
+log_phase(f"PHASE 11: RUN MODEL - Run the TensorFlow Lite model and perform a prediction with it.")
+
+interpreter = tf.lite.Interpreter(model_path=TFLITE_MODEL_FILE_PATH)
+
+interpreter.get_signature_list()
+
+classify_lite = interpreter.get_signature_runner("serving_default")
+
+# TODO: This bare statement is highly unusual. The purpose is unclear. Could it possibly be a typo in the tutorial?
+classify_lite
+
+predictions_lite = classify_lite(sequential_1_input=img_array)["outputs"]
+score_lite = tf.nn.softmax(predictions_lite)
+
+assert np.allclose(predictions, predictions_lite)
+
+log(f"TFLITE PREDICTION: This image most likely belongs to {class_names[np.argmax(score_lite)]} "
+    f"with a {100 * np.max(score_lite):.2f} percent confidence.")
+
 
 log_phase(f"PROJECT:  KERAS IMAGE CLASSIFICATION, ITERATIVE OPTIMIZATION DEMONSTRATION COMPLETE.  Exiting.")
 
