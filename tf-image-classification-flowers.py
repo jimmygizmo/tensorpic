@@ -1,6 +1,6 @@
 #! /usr/bin/env python
 # git@github.com:jimmygizmo/tensorpic/tf-image-classification-flowers.py
-# Version 0.5.0
+# Version 0.9.0
 
 print("Initializing Tensorflow.")
 import os
@@ -42,6 +42,8 @@ log_phase(f"PROJECT:  KERAS IMAGE CLASSIFICATION, ITERATIVE OPTIMIZATION - DEPLO
 log(f"Tensorflow version: {tf.__version__}  -  Keras version: {tf.keras.__version__}")
 tf_logger_initial_level = tf.get_logger().getEffectiveLevel()
 log(f"Tensorflow logger initial effective logging level: {tf_logger_initial_level}")
+log(f"INITIAL_EPOCHS: {INITIAL_EPOCHS}")
+log(f"OPTIMIZED_EPOCHS: {OPTIMIZED_EPOCHS}")
 
 
 log_phase(f"PHASE 1:  Download dataset to ~/.keras/datasets/ and count image files. Inspect a sample of images.")
@@ -260,9 +262,6 @@ for images, _ in training_dataset.take(1):
 
 plt.show()
 
-log(f"* Returning tensorflow logger to original level: {tf_logger_initial_level}")
-tf.get_logger().setLevel(tf_logger_initial_level)
-
 
 log_phase(f"PHASE 8: SECOND OPTIMIZATION: - Addressing overfitting. Data augmentation complete, now add Dropout.")
 
@@ -288,6 +287,9 @@ model = Sequential([
     layers.Dense(num_classes, name="outputs")
 ])
 
+log(f"* Returning tensorflow logger to original level: {tf_logger_initial_level}")
+tf.get_logger().setLevel(tf_logger_initial_level)
+
 log(f"COMPILE MODEL: Standard settings, but this is the Dropout model using augmented data.")
 model.compile(
     optimizer='adam',
@@ -299,12 +301,18 @@ log(f"Model summary:")
 model.summary()
 
 
+log(f"* Setting tensorflow logger to quieter ERROR level to suppress warnings during training of optimized model.")
+tf.get_logger().setLevel('ERROR')
+
 log(f"TRAIN MODEL: Train the Dropout model using the augmented data.")
 history = model.fit(
     training_dataset,
     validation_data=validation_dataset,
     epochs=OPTIMIZED_EPOCHS
 )
+
+log(f"* Returning tensorflow logger to original level: {tf_logger_initial_level}")
+tf.get_logger().setLevel(tf_logger_initial_level)
 
 
 log_phase(f"PHASE 8: VISUALIZE OPTIMIZED MODEL: - Accuracy of the optimized model with dropout, augmented data.")
@@ -352,6 +360,23 @@ log(f"PREDICTION: This image most likely belongs to {class_names[np.argmax(score
     f"with a {100 * np.max(score):.2f} percent confidence.")
 
 
+log_phase(f"PHASE 10: DEPLOYMENT - Convert model to TensorFlow Lite")
+
+log(f"* Setting tensorflow logger to quieter ERROR level to suppress warnings during TensorFlow Lite conversion.")
+tf.get_logger().setLevel('ERROR')
+
+log(f"PLOT: Convert the Keras Sequential model to a TensorFlow Lite model.")
+converter = tf.lite.TFLiteConverter.from_keras_model(model)
+tflite_model = converter.convert()
+
+log(f"* Returning tensorflow logger to original level: {tf_logger_initial_level}")
+tf.get_logger().setLevel(tf_logger_initial_level)
+
+log(f"DEPLOYABLE MODEL: Writing TensorFlow Lite model to file: model-flowers.tflite")
+with open("model-flowers.tflite", "wb") as f:
+    f.write(tflite_model)
+
+# The exported model should be about 15 MB.
 
 log_phase(f"PROJECT:  KERAS IMAGE CLASSIFICATION, ITERATIVE OPTIMIZATION DEMONSTRATION COMPLETE.  Exiting.")
 

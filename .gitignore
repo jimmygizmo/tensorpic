@@ -8,6 +8,9 @@
 #dataset-cifar10/
 #dataset-flowers/
 
+# Exported optimized model
+model-flowers.tflite
+
 # IntelliJ IDEs
 .idea/
 
