@@ -22,7 +22,9 @@ from PIL import Image
 # https://www.tensorflow.org/tutorials/images/classification
 
 DATASET_URL = "https://storage.googleapis.com/download.tensorflow.org/example_images/flower_photos.tgz"
-EPOCHS = 4
+SUNFLOWER_URL = "https://storage.googleapis.com/download.tensorflow.org/example_images/592px-Red_sunflower.jpg"
+INITIAL_EPOCHS = 10
+OPTIMIZED_EPOCHS = 15
 
 pp = pprint.PrettyPrinter(indent=4)
 
@@ -196,7 +198,7 @@ log_phase(f"PHASE 5: TRAINING - Train the model for 10 epochs with Keras model.f
 history = model.fit(
     training_dataset,
     validation_data=validation_dataset,
-    epochs=EPOCHS
+    epochs=INITIAL_EPOCHS
 )
 
 log_phase(f"PHASE 6: VISUALIZE - Assess accuracy over training epochs. One goal is to try to detect overfitting.")
@@ -210,7 +212,7 @@ val_acc = history.history['val_accuracy']
 loss = history.history['loss']
 val_loss = history.history['val_loss']
 
-epochs_range = range(EPOCHS)
+epochs_range = range(INITIAL_EPOCHS)
 
 plt.figure(figsize=(8, 8))
 plt.subplot(1, 2, 1)
@@ -298,12 +300,56 @@ model.summary()
 
 
 log(f"TRAIN MODEL: Train the Dropout model using the augmented data.")
-epochs = 15
 history = model.fit(
     training_dataset,
     validation_data=validation_dataset,
-    epochs=epochs
+    epochs=OPTIMIZED_EPOCHS
 )
+
+
+log_phase(f"PHASE 8: VISUALIZE OPTIMIZED MODEL: - Accuracy of the optimized model with dropout, augmented data.")
+
+acc = history.history["accuracy"]
+val_acc = history.history["val_accuracy"]
+
+loss = history.history["loss"]
+val_loss = history.history["val_loss"]
+
+epochs_range = range(OPTIMIZED_EPOCHS)
+
+plt.figure(figsize=(8, 8))
+plt.subplot(1, 2, 1)
+plt.plot(epochs_range, acc, label="Training Accuracy")
+plt.plot(epochs_range, val_acc, label="Validation Accuracy")
+plt.legend(loc="lower right")
+plt.title("Training and Validation Accuracy")
+
+plt.subplot(1, 2, 2)
+plt.plot(epochs_range, loss, label="Training Loss")
+plt.plot(epochs_range, val_loss, label=""'Validation Loss')
+plt.legend(loc="upper right")
+plt.title("Training and Validation Loss")
+
+log(f"PLOT: Historical accuracy - Optimized model using dropout and augmented data.")
+log(f"PLOT: * CLOSE PLOT/IMAGE WINDOW TO RESUME EXECUTION *  Execution will pause here on most platforms.")
+plt.show()
+
+
+log_phase(f"PHASE 9: Predict on new data.")
+
+sunflower_path = tf.keras.utils.get_file('Red_sunflower', origin=SUNFLOWER_URL)
+
+img = tf.keras.utils.load_img(
+    sunflower_path, target_size=(img_height, img_width)
+)
+img_array = tf.keras.utils.img_to_array(img)
+img_array = tf.expand_dims(img_array, 0)  # Create a batch
+
+predictions = model.predict(img_array)
+score = tf.nn.softmax(predictions[0])
+
+log(f"PREDICTION: This image most likely belongs to {class_names[np.argmax(score)]} "
+    f"with a {100 * np.max(score):.2f} percent confidence.")
 
 
 
