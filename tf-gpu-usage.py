@@ -118,6 +118,9 @@ if gpus:
 
 # The second method is to configure a virtual GPU device with tf.config.set_logical_device_configuration and set
 # a hard limit on the total memory to allocate on the GPU.
+# This is useful if you want to truly bound the amount of GPU memory available to the TensorFlow process.
+# This is common practice for local development when the GPU is shared with other applications such as a
+# workstation GUI.
 
 log(f"Configure a virtual GPU device. Set a hard limit on the total memory to allocate to the GPU.")
 gpus = tf.config.list_physical_devices('GPU')
@@ -135,4 +138,76 @@ if gpus:
         # Virtual devices must be set before GPUs have been initialized
         print(e)
 
+
+# DISABLING INTENTIONAL ERROR CASE.
+# log(f"Use a single GPU on a multi-GPU system. - ERROR Example - invalid device.")
+# # If you have more than one GPU in your system, the GPU with the lowest ID will be selected by default.
+# # If you would like to run on a different GPU, you will need to specify the preference explicitly:
+# tf.debugging.set_log_device_placement(True)
+# try:
+#     # Specify an invalid GPU device
+#     with tf.device('/device:GPU:2'):
+#         a = tf.constant([[1.0, 2.0, 3.0], [4.0, 5.0, 6.0]])
+#         b = tf.constant([[1.0, 2.0], [3.0, 4.0], [5.0, 6.0]])
+#         c = tf.matmul(a, b)
+# except RuntimeError as e:
+#     #log(f"*** EXCEPTION ***: RuntimeError")
+#     print(e)
+#
+# # TODO: Try to understand why the above intentional-error code (invalid device, GPU:2) did not error on my Mac.
+# # Perhaps there is new behavior. It seems to have happily chosen the available CPU:0
+# 2022-10-07 19:55:23.473319: I tensorflow/core/common_runtime/eager/execute.cc:1419] Executing op _EagerConst in
+#   device/job:localhost/replica:0/task:0/device:CPU:0
+# 2022-10-07 19:55:23.473741: I tensorflow/core/common_runtime/eager/execute.cc:1419] Executing op _EagerConst in
+#   device /job:localhost/replica:0/task:0/device:CPU:0
+# 2022-10-07 19:55:23.474464: I tensorflow/core/common_runtime/eager/execute.cc:1419] Executing op MatMul in
+#   device /job:localhost/replica:0/task:0/device:CPU:0
+
+
+# If you would like TensorFlow to automatically choose an existing and supported device to run the operations in case
+#   the specified one doesn't exist, you can call tf.config.set_soft_device_placement(True).
+log(f"Automatically choose an existing and supported device. set_soft_device_placement(True)")
+tf.debugging.set_log_device_placement(True)
+tf.config.set_soft_device_placement(True)
+
+# Creates some tensors
+a = tf.constant([[1.0, 2.0, 3.0], [4.0, 5.0, 6.0]])
+b = tf.constant([[1.0, 2.0], [3.0, 4.0], [5.0, 6.0]])
+c = tf.matmul(a, b)
+
+print(c)
+
+
+# Using multiple GPUs. Developing for multiple GPUs will allow a model to scale with the additional resources.
+# If developing on a system with a single GPU, you can simulate multiple GPUs with virtual devices.
+# This enables easy testing of multi-GPU setups without requiring additional resources.
+log(f"Simulate multiple GPUs to enable development/testing for multi-GPU systems.")
+gpus = tf.config.list_physical_devices('GPU')
+if gpus:
+    # Create 2 virtual GPUs with 1GB memory each
+    try:
+        tf.config.set_logical_device_configuration(
+            gpus[0],
+            [tf.config.LogicalDeviceConfiguration(memory_limit=1024),
+             tf.config.LogicalDeviceConfiguration(memory_limit=1024)])
+        logical_gpus = tf.config.list_logical_devices('GPU')
+        log(f"AFTER MULTI VIRTUAL ADDED - Physical GPU count: {len(gpus)}    Logical GPU count: {len(logical_gpus)}")
+    except RuntimeError as e:
+        log(f"*** EXCEPTION ***: RuntimeError")
+        # Virtual devices must be set before GPUs have been initialized
+        print(e)
+
+log(f"SIMULATE MULTIPLE GPUs. Notice above, two virtual GPUs were created. ** REQUIRES A PHYSICAL GPU TO WORK.")
+# UPDATE: We get the exception with or without a GPU.
+
+# * * * * * * * * * * * * * * * * *
+# There appears to be some issue. A lot of these blocks above are getting an error I cannot yet explain.
+# Physical devices cannot be modified after being initialized
+# This happens for both GPU present and not present
+# * * * * * * * * * * * * * * * * *
+
+# TODO: The last two small blocks of code still need to be tried from the tutorial at:
+# https://www.tensorflow.org/guide/gpu
+# TODO: The above exception case should not be happening as much or maybe not at all and the issue is not
+#   yet understood.
 
