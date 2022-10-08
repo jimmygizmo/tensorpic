@@ -1,0 +1,55 @@
+/Users/username/.pyenv/versions/ve.tensorpic/bin/python /Users/username/GITREPOS/tensorpic/tf-gpu-usage.py
+Initializing Tensorflow.
+2022-10-07 14:49:01.908680: I tensorflow/core/platform/cpu_feature_guard.cc:193] This TensorFlow binary is optimized with oneAPI Deep Neural Network Library (oneDNN) to use the following CPU instructions in performance-critical operations:  AVX2 FMA
+To enable them in other operations, rebuild TensorFlow with the appropriate compiler flags.
+
+
+[####]    ----  PROJECT:  GPU USAGE - DISTRIBUTION STRATEGIES - FINE-GRAINED CONTROL  ----
+
+
+[####]    Tensorflow version: 2.10.0  -  Keras version: 2.10.0
+
+[####]    Tensorflow logger initial effective logging level: 30
+
+[####]    Number of available GPUs: 0
+
+[####]    Available GPUs: []
+
+[####]    Turning on device placement logging so we can see GPU/CPU assignment. (tf.debugging)
+2022-10-07 14:49:09.984321: I tensorflow/core/platform/cpu_feature_guard.cc:193] This TensorFlow binary is optimized with oneAPI Deep Neural Network Library (oneDNN) to use the following CPU instructions in performance-critical operations:  AVX2 FMA
+To enable them in other operations, rebuild TensorFlow with the appropriate compiler flags.
+input: (_Arg): /job:localhost/replica:0/task:0/device:CPU:0
+_EagerConst: (_EagerConst): /job:localhost/replica:0/task:0/device:CPU:0
+output_RetVal: (_Retval): /job:localhost/replica:0/task:0/device:CPU:0
+2022-10-07 14:49:10.038009: I tensorflow/core/common_runtime/placer.cc:114] input: (_Arg): /job:localhost/replica:0/task:0/device:CPU:0
+2022-10-07 14:49:10.038035: I tensorflow/core/common_runtime/placer.cc:114] _EagerConst: (_EagerConst): /job:localhost/replica:0/task:0/device:CPU:0
+2022-10-07 14:49:10.038041: I tensorflow/core/common_runtime/placer.cc:114] output_RetVal: (_Retval): /job:localhost/replica:0/task:0/device:CPU:0
+2022-10-07 14:49:10.052456: I tensorflow/core/common_runtime/eager/execute.cc:1419] Executing op _EagerConst in device /job:localhost/replica:0/task:0/device:CPU:0
+2022-10-07 14:49:10.060009: I tensorflow/core/common_runtime/eager/execute.cc:1419] Executing op _EagerConst in device /job:localhost/replica:0/task:0/device:CPU:0
+2022-10-07 14:49:10.063102: I tensorflow/core/common_runtime/placer.cc:114] a: (_Arg): /job:localhost/replica:0/task:0/device:CPU:0
+2022-10-07 14:49:10.063122: I tensorflow/core/common_runtime/placer.cc:114] b: (_Arg): /job:localhost/replica:0/task:0/device:CPU:0
+2022-10-07 14:49:10.063132: I tensorflow/core/common_runtime/placer.cc:114] MatMul: (MatMul): /job:localhost/replica:0/task:0/device:CPU:0
+2022-10-07 14:49:10.063138: I tensorflow/core/common_runtime/placer.cc:114] product_RetVal: (_Retval): /job:localhost/replica:0/task:0/device:CPU:0
+2022-10-07 14:49:10.065125: I tensorflow/core/common_runtime/eager/execute.cc:1419] Executing op MatMul in device /job:localhost/replica:0/task:0/device:CPU:0
+a: (_Arg): /job:localhost/replica:0/task:0/device:CPU:0
+b: (_Arg): /job:localhost/replica:0/task:0/device:CPU:0
+MatMul: (MatMul): /job:localhost/replica:0/task:0/device:CPU:0
+product_RetVal: (_Retval): /job:localhost/replica:0/task:0/device:CPU:0
+tf.Tensor(
+[[22. 28.]
+ [49. 64.]], shape=(2, 2), dtype=float32)
+
+[####]    Tensors forced onto CPU. MatMul operation will run on GPU if possible.
+tf.Tensor(
+[[22. 28.]
+ [49. 64.]], shape=(2, 2), dtype=float32)
+
+[####]    Restrict TensorFlow to only use the first GPU.
+
+[####]    Limiting GPU memory growth: Setting experimental memory growth control to True on GPUs.
+
+[####]    Configure a virtual GPU device. Set a hard limit on the total memory to allocate to the GPU.
+2022-10-07 14:49:10.115248: I tensorflow/core/common_runtime/eager/execute.cc:1419] Executing op MatMul in device /job:localhost/replica:0/task:0/device:CPU:0
+
+Process finished with exit code 0
+

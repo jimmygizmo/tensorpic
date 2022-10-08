@@ -1,0 +1,40 @@
+Initializing Tensorflow.
+
+
+[####]    ----  PROJECT:  GPU USAGE - DISTRIBUTION STRATEGIES - FINE-GRAINED CONTROL  ----
+
+
+[####]    Tensorflow version: 2.8.2  -  Keras version: 2.8.0
+
+[####]    Tensorflow logger initial effective logging level: 30
+
+[####]    Number of available GPUs: 1
+
+[####]    Available GPUs: [PhysicalDevice(name='/physical_device:GPU:0', device_type='GPU')]
+
+[####]    Turning on device placement logging so we can see GPU/CPU assignment. (tf.debugging)
+Executing op _EagerConst in device /job:localhost/replica:0/task:0/device:GPU:0
+Executing op _EagerConst in device /job:localhost/replica:0/task:0/device:GPU:0
+Executing op MatMul in device /job:localhost/replica:0/task:0/device:GPU:0
+tf.Tensor(
+[[22. 28.]
+ [49. 64.]], shape=(2, 2), dtype=float32)
+
+[####]    Tensors forced onto CPU. MatMul operation will run on GPU if possible.
+Executing op MatMul in device /job:localhost/replica:0/task:0/device:GPU:0
+tf.Tensor(
+[[22. 28.]
+ [49. 64.]], shape=(2, 2), dtype=float32)
+
+[####]    Restrict TensorFlow to only use the first GPU.
+
+[####]    Physical GPU count: 1    Logical GPU count: 1
+
+[####]    Limiting GPU memory growth: Setting experimental memory growth control to True on GPUs.
+
+[####]    Setting experimental memory growth control to True on GPU: PhysicalDevice(name='/physical_device:GPU:0', device_type='GPU')
+
+[####]    *** EXCEPTION ***: RuntimeError
+Physical devices cannot be modified after being initialized
+
+

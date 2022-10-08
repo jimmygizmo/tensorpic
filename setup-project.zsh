@@ -20,8 +20,11 @@
 pip install --upgrade pip
 pip install --upgrade setuptools
 
-# Now we can install the modules we will need
-pip install -r requirements.txt
+# Now we can install the modules we will need.
+# The exact version of every module will match those used when the project code was last updated and tested.
+# If you want or need to let Python/pip install the latest available versions of everything,
+# then use requirements.txt as this file does not pin versions but will still provide everything you need.
+pip install -r pinned-requirements.txt
 
 
 # ** Be sure to set the correct project interpreter in your IDE. I use PyCharm and it has just a little bit of
